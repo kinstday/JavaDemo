@@ -1,17 +1,38 @@
 package org.example;
 
-//TIP 要<b>运行</b>代码，请按 <shortcut actionId="Run"/> 或
-// 点击装订区域中的 <icon src="AllIcons.Actions.Execute"/> 图标。
-public class Main {
-    public static void main(String[] args) {
-        //TIP 当文本光标位于高亮显示的文本处时按 <shortcut actionId="ShowIntentionActions"/>
-        // 查看 IntelliJ IDEA 建议如何修正。
-        System.out.printf("Hello and welcome!");
+import java.io.*;
+import java.util.*;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP 按 <shortcut actionId="Debug"/> 开始调试代码。我们已经设置了一个 <icon src="AllIcons.Debugger.Db_set_breakpoint"/> 断点
-            // 但您始终可以通过按 <shortcut actionId="ToggleLineBreakpoint"/> 添加更多断点。
-            System.out.println("i = " + i);
+public class Main {
+
+    //现场编程题题目内容：
+    //输入一系列字符串，将这些字符串排序：数字按从小到大排序，非数字按字典顺序，数字排在非数字后面。
+    //输入：2, 1, b, a
+    //输出：a, b, 1, 2
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str = br.readLine();
+
+        List<String> res1 = new ArrayList<>();
+        List<Integer> res2 = new ArrayList<>();
+        for(Character c:str.toCharArray()){
+            if(Character.isDigit(c)){
+                res2.add(Integer.parseInt(c+""));
+            }else if(Character.isLetter(c)){
+                res1.add(c+"");
+            }
         }
+        res1.sort(String::compareTo);
+        res2.sort(Comparator.comparingInt(o -> o));
+        StringJoiner sj = new StringJoiner(",");
+        for(String s:res1){
+            sj.add(s);
+        }
+        for(Integer i:res2){
+            sj.add(i+"");
+        }
+        System.out.println(sj);
     }
+
 }

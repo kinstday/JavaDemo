@@ -1,0 +1,61 @@
+package org.example.springdata;
+
+import jakarta.persistence.EntityManagerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+/**
+ * Spring Data JPA 配置类
+ *
+ * 在没有 Spring Boot 的情况下，手动配置三个核心 Bean：
+ * 1. DataSource — 数据库连接（H2 内存库）
+ * 2. EntityManagerFactory — JPA 实体管理器工厂
+ * 3. TransactionManager — 事务管理器
+ *
+ * @EnableJpaRepositories 指定 Repository 接口所在的包
+ */
+@Configuration
+@EnableJpaRepositories(basePackages = "org.example.springdata")
+public class SpringDataConfig {
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName("org.h2.Driver");
+        ds.setUrl("jdbc:h2:mem:springdata_test;DB_CLOSE_DELAY=-1");
+        ds.setUsername("sa");
+        ds.setPassword("");
+        return ds;
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource);
+        em.setPackagesToScan("org.example.springdata");
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+
+        Properties props = new Properties();
+        props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        props.setProperty("hibernate.hbm2ddl.auto", "update");
+        props.setProperty("hibernate.show_sql", "false");
+        props.setProperty("hibernate.format_sql", "true");
+        em.setJpaProperties(props);
+
+        return em;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
+}

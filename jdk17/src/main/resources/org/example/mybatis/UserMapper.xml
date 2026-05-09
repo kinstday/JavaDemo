@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.mybatis.UserMapper">
+
+    <!-- 建表 -->
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS users (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(200),
+            age INT
+        )
+    </update>
+
+    <!-- 插入（自动生成主键） -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (name, email, age)
+        VALUES (#{name}, #{email}, #{age})
+    </insert>
+
+    <!-- 按 ID 查询 -->
+    <select id="selectById" resultType="org.example.mybatis.User">
+        SELECT id, name, email, age FROM users WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有 -->
+    <select id="selectAll" resultType="org.example.mybatis.User">
+        SELECT id, name, email, age FROM users ORDER BY id
+    </select>
+
+    <!-- 按年龄范围查询 -->
+    <select id="selectByAgeRange" resultType="org.example.mybatis.User">
+        SELECT id, name, email, age FROM users
+        WHERE age BETWEEN #{minAge} AND #{maxAge}
+        ORDER BY age
+    </select>
+
+    <!-- 更新邮箱 -->
+    <update id="updateEmail">
+        UPDATE users SET email = #{email} WHERE id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <!-- 统计 -->
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM users
+    </select>
+
+</mapper>

@@ -1,0 +1,17 @@
+package pattern.decorator;
+
+/**
+ * @author 12
+ * Create By 下午2:39
+ */
+public class SimpleCoffee implements Coffee {
+    @Override
+    public String getDescription() {
+        return "Simple Coffee";
+    }
+
+    @Override
+    public double getCost() {
+        return 2.0;
+    }
+}
